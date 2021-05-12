@@ -1,13 +1,22 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { TextField, Button, Typography, Paper } from "@material-ui/core";
-import { createPosts } from "../../actions/posts";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  CircularProgress,
+} from "@material-ui/core";
+import { createPost, updatePost } from "../../actions/posts";
 import FileBase from "react-file-base64";
 import useStyles from "./styles";
 
-const Form = () => {
+const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const post = useSelector((state) =>
+    currentId ? state.posts.find((p) => p._id === currentId) : null
+  );
 
   const [postData, setPostData] = useState({
     creator: "",
@@ -17,10 +26,26 @@ const Form = () => {
     selectedFile: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createPosts(postData));
-    clearForm();
+    setLoading(true);
+    if (currentId) {
+      dispatch(
+        updatePost(currentId, postData, () => {
+          setLoading(false);
+          clearForm();
+        })
+      );
+    } else {
+      dispatch(
+        createPost(postData, () => {
+          setLoading(false);
+          clearForm();
+        })
+      );
+    }
   };
 
   const clearForm = () => {
@@ -31,7 +56,14 @@ const Form = () => {
       tags: "",
       selectedFile: "",
     });
+    setCurrentId(null);
   };
+
+  useEffect(() => {
+    if (post) {
+      setPostData(post);
+    }
+  }, [post]);
 
   return (
     <Paper className={classes.paper}>
@@ -104,8 +136,9 @@ const Form = () => {
           size="large"
           type="submit"
           fullWidth
+          disabled={loading ? true : false}
         >
-          Submit
+          {loading ? "Submiting..." : "Submit"}
         </Button>
         <Button
           variant="contained"

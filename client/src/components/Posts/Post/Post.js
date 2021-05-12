@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import useStyles from "./styles";
+import { useDispatch } from "react-redux";
+import { deletePost } from "../../../actions/posts";
 import {
   Card,
   CardActions,
@@ -11,10 +13,31 @@ import {
 import { ThumbUpAlt, Delete, MoreHoriz } from "@material-ui/icons";
 import moment from "moment";
 
-const Post = ({ post }) => {
+const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
-  const { selectedFile, title, creator, createdAt, tags, message, likeCount } =
-    post;
+  const {
+    _id,
+    selectedFile,
+    title,
+    creator,
+    createdAt,
+    tags,
+    message,
+    likeCount,
+  } = post;
+
+  const dispatch = useDispatch();
+
+  const [loading, setLoading] = useState(false);
+
+  const handleDelete = () => {
+    setLoading(true);
+    dispatch(
+      deletePost(_id, () => {
+        setLoading(false);
+      })
+    );
+  };
 
   return (
     <Card className={classes.card}>
@@ -24,7 +47,11 @@ const Post = ({ post }) => {
         <Typography variant="body2">{moment(createdAt).fromNow()}</Typography>
       </div>
       <div className={classes.overlay2}>
-        <Button style={{ color: "white" }} size="small" onClick={() => {}}>
+        <Button
+          style={{ color: "white" }}
+          size="small"
+          onClick={() => setCurrentId(_id)}
+        >
           <MoreHoriz fontSize="default" />
         </Button>
       </div>
@@ -33,8 +60,11 @@ const Post = ({ post }) => {
           {tags[0].split(" ").map((tag) => `#${tag} `)}
         </Typography>
       </div>
+      <Typography className={classes.title} variant="h5">
+        {title}
+      </Typography>
       <CardContent>
-        <Typography className={classes.title} variant="h5" gutterBottom>
+        <Typography variant="body1" gutterBottom>
           {message}
         </Typography>
       </CardContent>
@@ -43,9 +73,14 @@ const Post = ({ post }) => {
           <ThumbUpAlt fontSize="small" />
           {`${likeCount} Likes`}
         </Button>
-        <Button size="small" color="primary" onClick={() => {}}>
+        <Button
+          size="small"
+          color="primary"
+          onClick={handleDelete}
+          disabled={loading ? true : false}
+        >
           <Delete fontSize="small" />
-          Delete
+          {loading ? "Deleting..." : "Delete"}
         </Button>
       </CardActions>
     </Card>

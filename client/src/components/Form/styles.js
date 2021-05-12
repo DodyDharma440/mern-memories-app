@@ -21,4 +21,7 @@ export default makeStyles((theme) => ({
   buttonSubmit: {
     marginBottom: 10,
   },
+  imagePreview: {
+    maxWidth: "100%",
+  },
 }));

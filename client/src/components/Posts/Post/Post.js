@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import useStyles from "./styles";
 import { useDispatch } from "react-redux";
-import { deletePost } from "../../../actions/posts";
+import { deletePost, likePost } from "../../../actions/posts";
 import {
   Card,
   CardActions,
@@ -39,6 +39,10 @@ const Post = ({ post, setCurrentId }) => {
     );
   };
 
+  const handleLike = () => {
+    dispatch(likePost(_id));
+  };
+
   return (
     <Card className={classes.card}>
       <CardMedia className={classes.media} image={selectedFile} title={title} />
@@ -57,21 +61,26 @@ const Post = ({ post, setCurrentId }) => {
       </div>
       <div className={classes.details}>
         <Typography variant="body2" color="textSecondary">
-          {tags[0].split(" ").map((tag) => `#${tag} `)}
+          {tags.map((tag) => `#${tag} `)}
         </Typography>
       </div>
       <Typography className={classes.title} variant="h5">
         {title}
       </Typography>
       <CardContent>
-        <Typography variant="body1" gutterBottom>
+        <Typography variant="body2" paragraph color="textSecondary">
           {message}
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button size="small" color="primary" onClick={() => {}}>
+        <Button
+          size="small"
+          color="primary"
+          onClick={handleLike}
+          disabled={loading ? true : false}
+        >
           <ThumbUpAlt fontSize="small" />
-          {`${likeCount} Likes`}
+          &nbsp;{`${likeCount} Likes`}
         </Button>
         <Button
           size="small"

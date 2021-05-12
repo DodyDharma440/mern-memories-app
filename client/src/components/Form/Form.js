@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  TextField,
-  Button,
-  Typography,
-  Paper,
-  CircularProgress,
-} from "@material-ui/core";
+import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import { createPost, updatePost } from "../../actions/posts";
 import FileBase from "react-file-base64";
 import useStyles from "./styles";
@@ -109,7 +103,9 @@ const Form = ({ currentId, setCurrentId }) => {
           label="Tags"
           fullWidth
           value={postData.tags}
-          onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
+          onChange={(e) =>
+            setPostData({ ...postData, tags: e.target.value.split(",") })
+          }
         />
         <div>
           {postData.selectedFile !== "" && (

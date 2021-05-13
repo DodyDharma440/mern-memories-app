@@ -1,47 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-
-import { getPosts } from "./actions/posts";
-import { Container, AppBar, Typography, Grow, Grid } from "@material-ui/core";
-import { Posts, Form } from "./components";
-import useStyles from "./styles";
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { Container } from "@material-ui/core";
+import { Navbar, Home, Auth } from "./components";
+import theme from "./theme";
 
 const App = () => {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-
-  const [currentId, setCurrentId] = useState(null);
-
-  useEffect(() => {
-    dispatch(getPosts());
-  }, [currentId, dispatch]);
-
   return (
-    <Container maxWidth="lg">
-      <AppBar className={classes.appBar} position="static" color="inherit">
-        <Typography className={classes.heading} variant="h3" align="center">
-          My Memory
-        </Typography>
-      </AppBar>
-      <Grow in>
-        <Container>
-          <Grid
-            container
-            justify="space-between"
-            alignItems="stretch"
-            spacing={3}
-            className={classes.mainContainer}
-          >
-            <Grid item xs={12} sm={7}>
-              <Posts setCurrentId={setCurrentId} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Form currentId={currentId} setCurrentId={setCurrentId} />
-            </Grid>
-          </Grid>
+    <Router>
+      <ThemeProvider theme={theme}>
+        <Container maxWidth="lg">
+          <Navbar />
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/auth" component={Auth} />
+          </Switch>
         </Container>
-      </Grow>
-    </Container>
+      </ThemeProvider>
+    </Router>
   );
 };
 

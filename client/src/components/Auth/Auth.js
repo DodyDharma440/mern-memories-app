@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { GoogleLogin } from "react-google-login";
 import { LockOutlined } from "@material-ui/icons";
+import { signUp, signIn } from "../../actions/auth";
 import useStyles from "./styles";
 import Input from "./Input";
 import Icon from "./icon";
@@ -22,12 +23,28 @@ const Auth = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(formData);
+    if (isSignUp) {
+      dispatch(signUp(formData, history));
+    } else {
+      dispatch(signIn(formData, history));
+    }
   };
 
-  const handleChange = () => {};
+  const handleChange = (e) => {
+    const { value, name } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleShowPassword = () => {
     setShowPassword((prevState) => !prevState);
@@ -74,16 +91,18 @@ const Auth = () => {
             {isSignUp && (
               <>
                 <Input
-                  name="firstname"
+                  name="firstName"
                   label="First Name"
                   onChange={handleChange}
+                  value={formData.firstName}
                   autoFocus
                   half
                 />
                 <Input
-                  name="lastname"
+                  name="lastName"
                   label="Last Name"
                   onChange={handleChange}
+                  value={formData.lastName}
                   autoFocus
                   half
                 />
@@ -93,6 +112,7 @@ const Auth = () => {
               name="email"
               label="Email Address"
               onChange={handleChange}
+              value={formData.email}
               autoFocus
               type="email"
             />
@@ -101,6 +121,7 @@ const Auth = () => {
               label="Password"
               onChange={handleChange}
               autoFocus
+              value={formData.password}
               type={showPassword ? "text" : "password"}
               handleShowPassword={handleShowPassword}
             />
@@ -110,6 +131,7 @@ const Auth = () => {
                 label="Confirm Password"
                 onChange={handleChange}
                 autoFocus
+                value={formData.confirmPassword}
                 type="password"
                 handleShowPassword={handleShowPassword}
               />

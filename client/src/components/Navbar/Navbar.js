@@ -50,7 +50,7 @@ const Navbar = () => {
             >
               {user.result.name.charAt(0)}
             </Avatar>
-            <Typography className={classes.userName} variant="h6">
+            <Typography className={classes.userName} variant="body1">
               {user.result.name}
             </Typography>
             <Button

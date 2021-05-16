@@ -132,7 +132,7 @@ const Auth = () => {
                 onChange={handleChange}
                 autoFocus
                 value={formData.confirmPassword}
-                type="password"
+                type={showPassword ? "text" : "password"}
                 handleShowPassword={handleShowPassword}
               />
             )}

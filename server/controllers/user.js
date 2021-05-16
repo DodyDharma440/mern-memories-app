@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 
 import User from "../models/user.js";
 
+const JWT_KEY = "test";
+
 export const signIn = async (req, res) => {
   const { email, password } = req.body;
 
@@ -21,8 +23,8 @@ export const signIn = async (req, res) => {
 
     const token = jwt.sign(
       { email: existingUser.email, id: existingUser._id },
-      "test",
-      { expiresIn: "1d" }
+      JWT_KEY,
+      { expiresIn: "1h" }
     );
 
     res.status(200).json({
@@ -56,8 +58,8 @@ export const signUp = async (req, res) => {
       name: `${firstName} ${lastName}`,
     });
 
-    const token = jwt.sign({ email: result.email, id: result._id }, "test", {
-      expiresIn: "1d",
+    const token = jwt.sign({ email: result.email, id: result._id }, JWT_KEY, {
+      expiresIn: "1h",
     });
 
     res.status(200).json({

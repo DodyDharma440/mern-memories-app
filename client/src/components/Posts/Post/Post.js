@@ -10,7 +10,12 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
-import { ThumbUpAlt, Delete, MoreHoriz } from "@material-ui/icons";
+import {
+  ThumbUpAlt,
+  ThumbUpAltOutlined,
+  Delete,
+  MoreHoriz,
+} from "@material-ui/icons";
 import moment from "moment";
 
 const Post = ({ post, setCurrentId }) => {
@@ -19,12 +24,14 @@ const Post = ({ post, setCurrentId }) => {
     _id,
     selectedFile,
     title,
-    creator,
+    name,
     createdAt,
     tags,
     message,
-    likeCount,
+    likes,
+    creator,
   } = post;
+  const userData = JSON.parse(localStorage.getItem("userDataMemories"));
 
   const dispatch = useDispatch();
 
@@ -39,25 +46,52 @@ const Post = ({ post, setCurrentId }) => {
     );
   };
 
-  const handleLike = () => {
-    dispatch(likePost(_id));
+  const Likes = () => {
+    if (post.likes.length > 0) {
+      return post.likes.find(
+        (like) => like === (userData?.result?.googleId || userData?.result?._id)
+      ) ? (
+        <>
+          <ThumbUpAlt fontSize="small" />
+          &nbsp;
+          {post.likes.length > 2
+            ? `You and ${post.likes.length - 1} others`
+            : `${post.likes.length} like${post.likes.length > 1 ? "s" : ""}`}
+        </>
+      ) : (
+        <>
+          <ThumbUpAltOutlined fontSize="small" />
+          &nbsp;{likes.length} {likes.length === 1 ? "Like" : "Likes"}
+        </>
+      );
+    }
+
+    return (
+      <>
+        <ThumbUpAltOutlined fontSize="small" />
+        &nbsp;Like
+      </>
+    );
   };
 
   return (
     <Card className={classes.card}>
       <CardMedia className={classes.media} image={selectedFile} title={title} />
       <div className={classes.overlay}>
-        <Typography variant="h6">{creator}</Typography>
+        <Typography variant="h6">{name}</Typography>
         <Typography variant="body2">{moment(createdAt).fromNow()}</Typography>
       </div>
       <div className={classes.overlay2}>
-        <Button
-          style={{ color: "white" }}
-          size="small"
-          onClick={() => setCurrentId(_id)}
-        >
-          <MoreHoriz fontSize="default" />
-        </Button>
+        {(userData?.result?.googleId === creator ||
+          userData?.result?._id === creator) && (
+          <Button
+            style={{ color: "white" }}
+            size="small"
+            onClick={() => setCurrentId(_id)}
+          >
+            <MoreHoriz fontSize="default" />
+          </Button>
+        )}
       </div>
       <div className={classes.details}>
         <Typography variant="body2" color="textSecondary">
@@ -76,21 +110,23 @@ const Post = ({ post, setCurrentId }) => {
         <Button
           size="small"
           color="primary"
-          onClick={handleLike}
-          disabled={loading ? true : false}
+          onClick={() => dispatch(likePost(_id))}
+          disabled={!userData?.result ? true : false}
         >
-          <ThumbUpAlt fontSize="small" />
-          &nbsp;{`${likeCount} Likes`}
+          <Likes />
         </Button>
-        <Button
-          size="small"
-          color="primary"
-          onClick={handleDelete}
-          disabled={loading ? true : false}
-        >
-          <Delete fontSize="small" />
-          {loading ? "Deleting..." : "Delete"}
-        </Button>
+        {(userData?.result?.googleId === creator ||
+          userData?.result?._id === creator) && (
+          <Button
+            size="small"
+            color="primary"
+            onClick={handleDelete}
+            disabled={loading || !userData?.result ? true : false}
+          >
+            <Delete fontSize="small" />
+            {loading ? "Deleting..." : "Delete"}
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

@@ -11,9 +11,9 @@ const Form = ({ currentId, setCurrentId }) => {
   const post = useSelector((state) =>
     currentId ? state.posts.find((p) => p._id === currentId) : null
   );
+  const userData = JSON.parse(localStorage.getItem("userDataMemories"));
 
   const [postData, setPostData] = useState({
-    creator: "",
     title: "",
     message: "",
     tags: "",
@@ -27,14 +27,18 @@ const Form = ({ currentId, setCurrentId }) => {
     setLoading(true);
     if (currentId) {
       dispatch(
-        updatePost(currentId, postData, () => {
-          setLoading(false);
-          clearForm();
-        })
+        updatePost(
+          currentId,
+          { ...postData, name: userData?.result?.name },
+          () => {
+            setLoading(false);
+            clearForm();
+          }
+        )
       );
     } else {
       dispatch(
-        createPost(postData, () => {
+        createPost({ ...postData, name: userData?.result?.name }, () => {
           setLoading(false);
           clearForm();
         })
@@ -44,7 +48,6 @@ const Form = ({ currentId, setCurrentId }) => {
 
   const clearForm = () => {
     setPostData({
-      creator: "",
       title: "",
       message: "",
       tags: "",
@@ -59,6 +62,16 @@ const Form = ({ currentId, setCurrentId }) => {
     }
   }, [post]);
 
+  if (!userData?.result?.name) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h6" align="center">
+          Please Sign In to create and like memories
+        </Typography>
+      </Paper>
+    );
+  }
+
   return (
     <Paper className={classes.paper}>
       <form
@@ -69,16 +82,6 @@ const Form = ({ currentId, setCurrentId }) => {
         encType="multipart/form-data"
       >
         <Typography variant="h6">Create a memory</Typography>
-        <TextField
-          name="creator"
-          variant="outlined"
-          label="Creator"
-          fullWidth
-          value={postData.creator}
-          onChange={(e) =>
-            setPostData({ ...postData, creator: e.target.value })
-          }
-        />
         <TextField
           name="title"
           variant="outlined"

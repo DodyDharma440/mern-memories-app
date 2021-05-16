@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:5000" });
-
-// const url = "https://dody-memories-mern.herokuapp.com/posts";
+const API = axios.create({
+  baseURL: "https://dody-memories-mern.herokuapp.com",
+});
 
 API.interceptors.request.use((req) => {
   const getLocalStorage = JSON.parse(localStorage.getItem("userDataMemories"));

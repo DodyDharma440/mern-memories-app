@@ -1,12 +1,14 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://dody-memories-mern.herokuapp.com",
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? "https://dody-memories-mern.herokuapp.com"
+      : "http://localhost:5000",
 });
 
 API.interceptors.request.use((req) => {
   const getLocalStorage = JSON.parse(localStorage.getItem("userDataMemories"));
-
   if (getLocalStorage !== null && getLocalStorage.result) {
     req.headers.Authorization = `Bearer ${getLocalStorage.token}`;
   }
@@ -17,6 +19,14 @@ API.interceptors.request.use((req) => {
 //Posts API
 export const fetchPosts = () => {
   return API.get("/posts");
+};
+
+export const searchPosts = (searchQuery) => {
+  return API.get(
+    `/posts/search?searchQuery=${searchQuery.searchValue || "none"}&tags=${
+      searchQuery.tags
+    }`
+  );
 };
 
 export const createPost = (newPost) => {

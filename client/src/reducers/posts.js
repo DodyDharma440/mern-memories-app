@@ -4,6 +4,7 @@ import {
   UPDATE,
   LIKE,
   DELETE,
+  FETCH_BY_SEARCH,
 } from "../constants/actionTypes";
 
 const reducer = (posts = [], action) => {
@@ -13,6 +14,9 @@ const reducer = (posts = [], action) => {
 
     case CREATE:
       return [...posts, action.payload];
+
+    case FETCH_BY_SEARCH:
+      return action.payload;
 
     case UPDATE:
     case LIKE:

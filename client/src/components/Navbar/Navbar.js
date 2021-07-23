@@ -4,6 +4,7 @@ import { AppBar, Typography, Toolbar, Avatar, Button } from "@material-ui/core";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import decode from "jwt-decode";
 import useStyles from "./styles";
+import { memoriesText, memoriesLogo } from "../../assets/images";
 
 const Navbar = () => {
   const classes = useStyles();
@@ -38,17 +39,15 @@ const Navbar = () => {
 
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">
-      <div className={classes.brandContainer}>
-        <Typography
-          component={Link}
-          to="/"
-          className={classes.heading}
-          variant="h3"
-          align="center"
-        >
-          Memories
-        </Typography>
-      </div>
+      <Link to="/" className={classes.brandContainer}>
+        <img src={memoriesText} alt="Memories Text" height="45px" />
+        <img
+          src={memoriesLogo}
+          alt="Memories Logo"
+          height="40px"
+          className={classes.image}
+        />
+      </Link>
       <Toolbar className={classes.toolbar}>
         {user ? (
           <div className={classes.profile}>

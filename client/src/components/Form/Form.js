@@ -9,7 +9,7 @@ const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const post = useSelector((state) =>
-    currentId ? state.posts.find((p) => p._id === currentId) : null
+    currentId ? state.posts.posts.find((p) => p._id === currentId) : null
   );
   const userData = JSON.parse(localStorage.getItem("userDataMemories"));
 
@@ -73,7 +73,7 @@ const Form = ({ currentId, setCurrentId }) => {
   }
 
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} elevation={6}>
       <form
         autoComplete="off"
         noValidate
@@ -81,7 +81,9 @@ const Form = ({ currentId, setCurrentId }) => {
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
-        <Typography variant="h6">Create a memory</Typography>
+        <Typography variant="h6">
+          {currentId ? "Edit memory" : "Create a memory"}
+        </Typography>
         <TextField
           name="title"
           variant="outlined"

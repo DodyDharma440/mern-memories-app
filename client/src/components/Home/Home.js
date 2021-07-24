@@ -18,9 +18,7 @@ import Form from "../Form/Form";
 import useStyles from "./styles";
 
 const useQuery = () => {
-  const location = useLocation();
-
-  return new URLSearchParams(location.search);
+  return new URLSearchParams(useLocation().search);
 };
 
 const Home = () => {
@@ -29,7 +27,7 @@ const Home = () => {
   const history = useHistory();
   const query = useQuery();
   const page = query.get("page") || 1;
-  const searchQuery = query.get("search");
+  const searchQuery = query.get("searchQuery");
 
   const [currentId, setCurrentId] = useState(null);
   const [searchValue, setSearchValue] = useState("");
@@ -67,9 +65,14 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(getPosts());
-  }, [currentId, dispatch]);
+  // useEffect(() => {
+  //   dispatch(getPosts());
+  // }, [currentId, dispatch]);
+
+  // useEffect(() => {
+  //   console.log("search ->", searchQuery);
+  //   console.log("page ->", page);
+  // }, [searchQuery, page]);
 
   // useEffect(() => {
   //   console.log(searchQuery);
@@ -129,11 +132,11 @@ const Home = () => {
               </Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
-            <Paper elevation={6}>
-              <div className={classes.pagination}>
-                <Pagination />
-              </div>
-            </Paper>
+            {!searchQuery && !tags.length && (
+              <Paper elevation={6} className={classes.pagination}>
+                <Pagination page={page} />
+              </Paper>
+            )}
           </Grid>
         </Grid>
       </Container>

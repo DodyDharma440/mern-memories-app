@@ -7,10 +7,12 @@ import {
   FETCH_BY_SEARCH,
   START_LOADING,
   END_LOADING,
+  FETCH_POST,
 } from "../constants/actionTypes";
 
 const initialState = {
   posts: [],
+  post: {},
   currentPage: 1,
   numberOfPage: 1,
   isLoading: false,
@@ -36,6 +38,12 @@ const reducer = (state = initialState, action) => {
         posts: action.payload.data,
         currentPage: action.payload.currentPage,
         numberOfPage: action.payload.numberOfPage,
+      };
+
+    case FETCH_POST:
+      return {
+        ...state,
+        post: action.payload,
       };
 
     case CREATE:

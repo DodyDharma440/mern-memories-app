@@ -21,6 +21,10 @@ export const fetchPosts = (page) => {
   return API.get(`/posts?page=${page}`);
 };
 
+export const fetchPost = (id) => {
+  return API.get(`/posts/${id}`);
+};
+
 export const searchPosts = (searchQuery) => {
   return API.get(
     `/posts/search?searchQuery=${searchQuery.searchValue || "none"}&tags=${

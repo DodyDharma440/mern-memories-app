@@ -8,6 +8,7 @@ import {
   FETCH_BY_SEARCH,
   START_LOADING,
   END_LOADING,
+  FETCH_POST,
 } from "../constants/actionTypes";
 
 export const getPosts = (page) => {
@@ -45,6 +46,30 @@ export const searchPosts = (seachQuery) => {
       dispatch({
         type: FETCH_BY_SEARCH,
         payload: data.searchResult,
+      });
+      dispatch({
+        type: END_LOADING,
+      });
+    } catch (error) {
+      console.log(error.response.data.message || error.message);
+      dispatch({
+        type: END_LOADING,
+      });
+    }
+  };
+};
+
+export const getPost = (id) => {
+  return async (dispatch) => {
+    dispatch({
+      type: START_LOADING,
+    });
+    try {
+      const { data } = await api.fetchPost(id);
+
+      dispatch({
+        type: FETCH_POST,
+        payload: data,
       });
       dispatch({
         type: END_LOADING,
